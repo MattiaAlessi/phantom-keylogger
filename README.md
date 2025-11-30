@@ -40,6 +40,8 @@ STRICTLY PROHIBITED FOR:
 - **File System Stealth**: Hidden file attributes and obfuscated naming
 - **Network Camouflage**: Secure communication through ngrok tunnels
 
+> Note: it has only been tested on PC defended by McAfee LiveSafe
+
 ## 🚀 QUICK DEPLOYMENT
 
 ### Phase 1: Command & Control Setup
@@ -100,9 +102,9 @@ python manager.py
 ### Persistence Mechanisms
 
 Startup Folder: %APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\  
+Easily accessible by digiting **shell:startup** in the dialog box (WIN+r)
 File Name: WindowsSecurityManager.exe  
 Attributes: Hidden system file  
-Mutex: Global\WindowsSecurityUpdateManager  
 
 
 ## 🛡️ DEFENSE EVASION TECHNIQUES
