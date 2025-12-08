@@ -2,9 +2,9 @@
 
 ![Red Team](https://img.shields.io/badge/OPERATION-PHANTOM-red)
 ![Stealth](https://img.shields.io/badge/STEALTH-ACTIVE-black)
-![Version](https://img.shields.io/badge/VERSION-1.0.0-critical)
+![Version](https://img.shields.io/badge/VERSION-1.1.0-critical)
 
-## 🎯 MISSION BRIEF
+## 🎯 PROJECT OVERVIEW
 
 **Phantom Keylogger** is an advanced, stealth-enabled keystroke and visual intelligence gathering system. Built with operational security as the primary objective, this tool provides persistent surveillance capabilities while maintaining minimal footprint on target systems.
 
@@ -39,8 +39,6 @@ STRICTLY PROHIBITED FOR:
 - **Anti-Analysis**: Mutex-based single instance protection
 - **File System Stealth**: Hidden file attributes and obfuscated naming
 - **Network Camouflage**: Secure communication through ngrok tunnels
-
-> Note: it has only been tested on PC defended by McAfee LiveSafe
 
 ## 🚀 QUICK DEPLOYMENT
 

