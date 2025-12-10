@@ -4,45 +4,44 @@
 ![Stealth](https://img.shields.io/badge/STEALTH-ACTIVE-black)
 ![Version](https://img.shields.io/badge/VERSION-1.1.0-critical)
 
-## 🎯 PROJECT OVERVIEW
+## 🎯 MISSION BRIEF
 
-**Phantom Keylogger** is an advanced, stealth-enabled keystroke and visual intelligence gathering system. Built with operational security as the primary objective, this tool provides persistent surveillance capabilities while maintaining minimal footprint on target systems.
+**Phantom Keylogger** is an advanced, stealth-enabled keystroke and visual intelligence gathering system. Built with operational security as the primary objective, this tool provides persistent surveillance capabilities while maintaining minimal footprint on target systems during authorized red team engagements.
 
-### ⚠️ LEGAL WARNING & USAGE POLICY
+### ⚠️ OPERATIONAL PROTOCOLS
 
-THIS TOOL IS STRICTLY FOR:  
-    - Authorized penetration testing  
-    - Red team exercises with written permission  
-    - Educational security research  
-    - Corporate security assessments with proper authorization  
+**AUTHORIZED USE CASES:**  
+    - Authorized penetration testing operations  
+    - Red team exercises with written Rules of Engagement  
+    - Security research in controlled environments  
+    - Defensive security control validation  
 
-STRICTLY PROHIBITED FOR:  
-    - Unauthorized surveillance  
-    - Illegal hacking activities    
-    - Personal data theft  
-    - Any malicious purposes  
+**PROHIBITED OPERATIONS:**  
+    - Unauthorized surveillance activities  
+    - Illegal intrusion or data exfiltration  
+    - Personal privacy violation  
+    - Any non-authorized offensive operations  
 
-**USERS ASSUME FULL LEGAL RESPONSIBILITY FOR PROPER USAGE**
+**OPERATORS ASSUME FULL LEGAL RESPONSIBILITY FOR PROPER DEPLOYMENT**
 
 
 ## 🛡️ OPERATIONAL CAPABILITIES
 
-### Core Intelligence Gathering
-- **Keystroke Logging**: Advanced keyboard capture with special key translation
-- **Visual Surveillance**: Automated screenshot capture at configurable intervals
-- **System Intelligence**: Hostname, username, and environment data collection
-- **Persistent Operations**: Continuous monitoring with automatic recovery
+### Intelligence Collection Modules
+- **Keystroke Interception**: Advanced keyboard capture with special key translation
+- **Visual Surveillance**: Automated screenshot capture at configurable intervals  
+- **System Reconnaissance**: Hostname, username, and environment data collection
+- **Persistent Implant**: Continuous monitoring with automatic recovery mechanisms
 
-### Stealth & Evasion Features
+### Operational Security Features
 - **Zero UI Footprint**: Completely invisible to end users
 - **Persistence Mechanisms**: Automatic startup installation
-- **Anti-Analysis**: Mutex-based single instance protection
-- **File System Stealth**: Hidden file attributes and obfuscated naming
-- **Network Camouflage**: Secure communication through ngrok tunnels
+- **Anti-Forensics**: Mutex-based single instance protection
+- **File System Obfuscation**: Hidden file attributes and legitimate naming
 
-## 🚀 QUICK DEPLOYMENT
+## 🚀 OPERATIONAL DEPLOYMENT
 
-### Phase 1: Command & Control Setup
+### Phase 1: Command & Control Infrastructure
 
 ```bash
 # 1. Clone operational repository
@@ -113,7 +112,12 @@ Attributes: Hidden system file
 - Network Blending: HTTPS traffic to legitimate-looking domains
 - Memory Operations: No suspicious API calls or injection
 
-### Detection Countermeasures
-- No Disk Writes: All data transmitted remotely
-- Standard Libraries: Only common Python libraries used
-- Clean Exit Procedures: No crash dumps or error reports
+### Operational Security Measures
+- No Local Artifacts: All data transmitted remotely via encrypted channels
+- Standard Tooling: Utilizes only common, whitelisted Python libraries
+- Clean Exit Procedures: No crash dumps or forensic artifacts left behind
+
+### 📊 OPERATIONAL METRICS
+- Detection Evasion: Successfully tested against multiple security solutions with multiple Antivirus installed
+- Data Exfiltration: Encrypted, real-time transmission to C2
+- Operational Uptime: Continuous monitoring with auto-recovery
